@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace PLEXRenamer
@@ -49,20 +44,20 @@ namespace PLEXRenamer
 
                     var newSeason = new Season()
                     {
-                        name = "s" + (seasonNumber < 10 ? "0" : "") + seasonNumber.ToString(),
-                        path = s,
-                        number = seasonNumber,
-                        episodes = new List<Episode>(),
+                        Name = "s" + (seasonNumber < 10 ? "0" : "") + seasonNumber.ToString(),
+                        Path = s,
+                        Number = seasonNumber,
+                        Episodes = new List<Episode>(),
                     };
 
                     foreach (var ep in episodes)
                     {
-                        newSeason.episodes.Add(new Episode()
+                        newSeason.Episodes.Add(new Episode()
                         {
-                            name = "e" + (episodeNumber < 10 ? "0" : "") + episodeNumber.ToString(),
-                            path = ep,
-                            extension = ep.Split('.').Last(),
-                            number = episodeNumber,
+                            Name = "e" + (episodeNumber < 10 ? "0" : "") + episodeNumber.ToString(),
+                            Path = ep,
+                            Extension = ep.Split('.').Last(),
+                            Number = episodeNumber,
                         });
 
                         episodeNumber += 1;
@@ -74,9 +69,9 @@ namespace PLEXRenamer
 
                 foreach (var s in seasonList)
                 {
-                    foreach (var ep in s.episodes)
+                    foreach (var ep in s.Episodes)
                     {
-                        lstEpisodes.Items.Add(s.name + ep.name + "." + ep.extension + " - " + ep.path);
+                        lstEpisodes.Items.Add(s.Name + ep.Name + "." + ep.Extension + " - " + ep.Path);
                     }
                 }
             }
@@ -90,33 +85,20 @@ namespace PLEXRenamer
 
             foreach (var s in seasonList)
             {
-                foreach (var ep in s.episodes)
+                foreach (var ep in s.Episodes)
                 {
-                    var file = new FileInfo(ep.path);
+                    var file = new FileInfo(ep.Path);
+                    var newDir = txtFolderPath.Text + "\\Season " + (s.Number < 10 ? "0" : "") + s.Number.ToString();
 
-                    File.Move(file.FullName, file.Directory.FullName + "\\" + s.name + ep.name + "." + ep.extension);
+                    if (!Directory.Exists(newDir))
+                        Directory.CreateDirectory(newDir);
+
+                    File.Move(file.FullName, newDir + "\\" + s.Name + ep.Name + "." + ep.Extension);
                     prgRenaming.PerformStep();
                 }
             }
 
             MessageBox.Show("Renaming Finished.");
         }
-
-    }
-
-    public class Season
-    {
-        public string name { get; set; }
-        public string path { get; set; }
-        public int number { get; set; }
-        public List<Episode> episodes { get; set; }
-    }
-
-    public class Episode
-    {
-        public string name { get; set; }
-        public string path { get; set; }
-        public string extension { get; set; }
-        public int number { get; set; }
     }
 }
