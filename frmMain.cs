@@ -14,7 +14,7 @@ namespace PLEXRenamer
         {
             InitializeComponent();
 
-            txtFolderPath.Text = "D:\\PLEX Media";
+            txtFolderPath.Text = "E:\\_Plex";
         }
 
         private void BtnSelectFolder_Click(object sender, EventArgs e)
